@@ -8,7 +8,7 @@ require 'fileutils'
 require 'optparse'
 
 
-SCRIPT_VERSION = "0.2.0"
+SCRIPT_VERSION = "0.2.1"
 
 class FileSweeper
   IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif)
@@ -18,6 +18,14 @@ class FileSweeper
     @options = opts
     set_conds
   end
+
+  def sweep
+    sweep_files
+    sweep_directories
+  end
+
+
+  private
 
   def set_conds
     @conds = []
@@ -30,14 +38,6 @@ class FileSweeper
     end
     @conds << lambda{|f| not_image?(f)} if @options[:not_image]
   end
-
-  def sweep
-    sweep_files
-    sweep_directories
-  end
-
-
-  private
 
   def sweep_files
     @dir.children.select{|c| c.file?}.each do |c|
