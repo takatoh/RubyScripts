@@ -5,10 +5,11 @@
 
 require 'pathname'
 require 'fileutils'
+require 'date'
 require 'optparse'
 
 
-SCRIPT_VERSION = "0.2.1"
+SCRIPT_VERSION = "0.2.2"
 
 class FileSweeper
   IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif)
@@ -37,6 +38,10 @@ class FileSweeper
       @conds << lambda{|f| !(@options[:excerpt_types].include?(f.extname.downcase))}
     end
     @conds << lambda{|f| not_image?(f)} if @options[:not_image]
+    @conds << lambda do |f|
+      t = File.mtime(f)
+      @options[:distance] < Date.today - Date.new(t.year, t.month, t.day)
+    end
   end
 
   def sweep_files
@@ -88,6 +93,9 @@ opts.on('-e', '--excerpt-types=TYPES', 'excerpt specified types(comma separated)
 end
 opts.on('--not-image', "excerpt following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
   options[:not_image] = true
+end
+opts.on('-T', '--time-distance=N', "older than N days ago") do |v|
+  options[:distance] = v.to_i
 end
 opts.on('--empty-dir', 'remove empty directories'){|v| options[:empty_dir] = true}
 opts.on_tail('-h', '--help', 'show this message'){|v| puts opts; exit}
