@@ -41,7 +41,7 @@ class FileSweeper
     @conds << lambda do |f|
       t = File.mtime(f)
       @options[:distance] < Date.today - Date.new(t.year, t.month, t.day)
-    end
+    end if @options[:distance]
   end
 
   def sweep_files
