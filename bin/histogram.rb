@@ -19,7 +19,7 @@ class Counter
     end
   end
 
-  def histgram
+  def histogram
     @data.keys.sort.each do |v|
       n = @data[v]
       puts "#{v}: (#{n.to_s.rjust(3)}) " + "*" * n
@@ -44,5 +44,5 @@ end
 data = File.readlines(ARGV.shift).map{|l| l.chomp}
 counter = Counter.new
 data.each{|d| counter.up(d)}
-counter.histgram
+counter.histogram
 
