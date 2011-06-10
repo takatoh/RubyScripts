@@ -34,8 +34,8 @@ class FileSweeper
     if @options[:types]
       @conds << lambda{|f| @options[:types].include?(f.extname.downcase)}
     end
-    if @options[:excerpt_types]
-      @conds << lambda{|f| !(@options[:excerpt_types].include?(f.extname.downcase))}
+    if @options[:except_types]
+      @conds << lambda{|f| !(@options[:except_types].include?(f.extname.downcase))}
     end
     @conds << lambda{|f| not_image?(f)} if @options[:not_image]
     @conds << lambda do |f|
@@ -88,10 +88,10 @@ opts.on('-t', '--types=TYPES', 'remove specified types(comma separated)') do |v|
   options[:types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
 end
 opts.on('-a', '--all-types', 'remove all types'){|v| options[:all_types] = true}
-opts.on('-e', '--excerpt-types=TYPES', 'excerpt specified types(comma separated)') do |v|
-  options[:excerpt_types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
+opts.on('-e', '--except-types=TYPES', 'except specified types(comma separated)') do |v|
+  options[:except_types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
 end
-opts.on('--not-image', "excerpt following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
+opts.on('--not-image', "except following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
   options[:not_image] = true
 end
 opts.on('-T', '--time-distance=N', "older than N days ago") do |v|
