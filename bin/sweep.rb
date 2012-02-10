@@ -1,3 +1,4 @@
+#! ruby
 # -*- encoding: utf-8 -*-
 #
 # sweep.rb - Sweep files in the directory.
@@ -9,10 +10,10 @@ require 'date'
 require 'optparse'
 
 
-SCRIPT_VERSION = "0.2.2"
+SCRIPT_VERSION = "v0.2.3"
 
 class FileSweeper
-  IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif)
+  IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif .tif .tiff .tga .pcx)
 
   def initialize(dir, opts = {})
     @dir = Pathname.new(dir)
@@ -30,18 +31,24 @@ class FileSweeper
 
   def set_conds
     @conds = []
-    @conds << lambda{|f| true} if @options[:all_types]
+    if @options[:all_types]
+      @conds << lambda{|f| true}
+    end
     if @options[:types]
       @conds << lambda{|f| @options[:types].include?(f.extname.downcase)}
     end
     if @options[:except_types]
       @conds << lambda{|f| !(@options[:except_types].include?(f.extname.downcase))}
     end
-    @conds << lambda{|f| not_image?(f)} if @options[:not_image]
-    @conds << lambda do |f|
-      t = File.mtime(f)
-      @options[:distance] < Date.today - Date.new(t.year, t.month, t.day)
-    end if @options[:distance]
+    if @options[:not_image]
+      @conds << lambda{|f| not_image?(f)}
+    end
+    if @options[:distance]
+      @conds << lambda do |f|
+        t = File.mtime(f)
+        @options[:distance] < Date.today - Date.new(t.year, t.month, t.day)
+      end
+    end
   end
 
   def sweep_files
@@ -61,8 +68,12 @@ class FileSweeper
     @dir.children.select{|c| c.directory?}.each do |c|
       FileSweeper.new(c, @options).sweep
       if @options[:empty_dir] && c.children.empty?
-        c.rmdir
-        puts "DIR:  #{c}"
+        if @options[:dry_run]
+          puts c
+        else
+          c.rmdir
+          puts "DIR:  #{c}"
+        end
       end
     end
   end
@@ -81,7 +92,7 @@ options = {}
 opts = OptionParser.new
 opts.banner =<<EOB
 #{opts.program_name} - Sweep files in the directory.
-Usage: #{opts.program_name} [option] DIR
+Usage: #{opts.program_name} [option] <dir>
 EOB
 opts.on('-d', '--dry-run', 'dry running'){|v| options[:dry_run] = true}
 opts.on('-t', '--types=TYPES', 'remove specified types(comma separated)') do |v|
