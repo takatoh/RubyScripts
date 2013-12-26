@@ -5,13 +5,19 @@ require 'rubygems'
 require 'optparse'
 
 
+SCRIPT_VERSION = "v.0.1.0"
+
+
 options = {:geometry => "320x320"}
 opts = OptionParser.new
 opts.banner =<<EOB
-Usage: #{File.basename($0)} [options] orig thumbnail
+Usage: #{opts.program_name} [options] <orig> <thumbnail>
 EOB
-opts.on('-g', '--geometry=STRING', String, 'geometry of thumbnail(default is "320x320")'){
-  |v| options[:geometry] = v}
+opts.on('-g', '--geometry=STRING', String, 'geometry of thumbnail(default is "320x320")') do
+  |v| options[:geometry] = v
+end
+opts.on_tail('-h', '--help', 'show this message'){|v| print opts; exit}
+opts.on_tail('-v', '--version', 'show version'){ puts SCRIPT_VERSION; exit }
 opts.parse!
 
 unless ARGV.size == 2
