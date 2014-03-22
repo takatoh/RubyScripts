@@ -10,12 +10,12 @@ require 'date'
 require 'optparse'
 
 
-SCRIPT_VERSION = "v0.2.3"
+SCRIPT_VERSION = "v0.2.4"
 
 class FileSweeper
   IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif .tif .tiff .tga .pcx)
 
-  def initialize(dir, opts = {})
+  def initialize(dir, opts)
     @dir = Pathname.new(dir)
     @options = opts
     set_conds
