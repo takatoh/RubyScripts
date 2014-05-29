@@ -1,11 +1,10 @@
 #!ruby
 # -*- encoding: utf-8 -*-
 
-require 'rubygems'
 require 'optparse'
 
 
-SCRIPT_VERSION = "v.0.1.0"
+SCRIPT_VERSION = "v.0.1.1"
 
 
 options = {:geometry => "320x320"}
@@ -27,4 +26,3 @@ end
 
 orig_file, thumb_file = ARGV
 system("convert -scale #{options[:geometry]} #{orig_file} #{thumb_file}")
-
