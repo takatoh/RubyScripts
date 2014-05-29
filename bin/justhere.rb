@@ -1,8 +1,8 @@
 #!ruby
+# encoding: utf-8
 #
 #  justhere.rb -- Make command to come back to here!
 #
-#  $Id: justhere.rb 62 2007-04-01 09:16:15Z 24711 $
 
 require 'optparse'
 

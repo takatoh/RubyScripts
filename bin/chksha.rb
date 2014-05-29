@@ -1,4 +1,5 @@
 #!ruby
+# encoding: utf-8
 #
 #  Check/Make SHA256 hash.
 #

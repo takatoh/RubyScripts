@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Translate source code from BrainFu*k into Ruby.
 #

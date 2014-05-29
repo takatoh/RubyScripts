@@ -1,4 +1,5 @@
 #! ruby
+# encoding: utf-8
 
 
 require 'human_bytes'
