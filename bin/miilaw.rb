@@ -1,7 +1,10 @@
+#! ruby
 # -*- encoding: utf-8 -*-
 #
 #  miilaw.rb - Methinks It Is Like A Weasel.
 #
+
+require 'optparse'
 
 
 IDEAL = "METHINKS IT IS LIKE A WEASEL"
@@ -64,14 +67,11 @@ class Nature
 end
 
 
-if __FILE__ == $0
-
-require 'optparse'
-
 def err_exit(msg)
   $stderr.print msg
   exit
 end
+
 
 options = {:number => 100}
 opts = OptionParser.new
@@ -101,6 +101,4 @@ while true do
   individual = nature.select(next_gen)
   print "#{genaration} : #{individual}\n"
   break if individual.phenotype == IDEAL
-end
-
 end
