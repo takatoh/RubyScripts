@@ -62,6 +62,6 @@ codes.each do |code|
   puts "Author:            #{item['author']}"
   puts "Publisher:         #{item['publisher']}"
   puts "Manufacturer:      #{item['manufacturer']}"
-  puts "ISBN:              #{item['isbn']}"
+  puts "ISBN:              #{Lisbn.new(item['isbn']).parts.join('-')}"
   puts ""
 end
