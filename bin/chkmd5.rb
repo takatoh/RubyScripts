@@ -13,7 +13,7 @@ def mkmd5(file)
 end
 
 def chkmd5(file, hash)
-  mkmd5(file) == hash
+  mkmd5(file) == hash.downcase
 end
 
 
