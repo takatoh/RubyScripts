@@ -23,6 +23,7 @@ ARGV.options do |opt|
 #{opt.program_name}  -  Check/Make MD5 hash.
 
 Usage: #{opt.program_name} [-c] hashfile
+       #{opt.program_name} [-c] -H HASH file
        #{opt.program_name} -m [-f] [-s] file [file..]
 
   EOM
@@ -34,6 +35,7 @@ Usage: #{opt.program_name} [-c] hashfile
   opt.on('-s', '--same-name-as-file', 'Output to same-name-as-file.md5.'){
     options[:sameas] = true
   }
+  opt.on_tail('-h', '--help', 'Show this message.'){ print opt}
   opt.parse!
 end
 
