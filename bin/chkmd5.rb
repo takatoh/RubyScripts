@@ -28,14 +28,15 @@ Usage: #{opt.program_name} [-c] hashfile
 
   EOM
   opt.on('-c', '--check', 'Check MD5 hash(default).'){ options[:task] = :check }
-  opt.on('-H', '--hash=HASH', 'HASH value to be compared. ARGV must bi a file name.'){|v|
-    options[:hash] = v}
+  opt.on('-H', '--hash=HASH', 'HASH value to be compared. Argument must be a file name.'){|v|
+    options[:hash] = v
+  }
   opt.on('-m', '--make', 'Make MD5 hash.'){ options[:task] = :make }
   opt.on('-f', '--with-filename', 'Print file name.'){ options[:filename] = true }
   opt.on('-s', '--same-name-as-file', 'Output to same-name-as-file.md5.'){
     options[:sameas] = true
   }
-  opt.on_tail('-h', '--help', 'Show this message.'){ print opt}
+  opt.on_tail('-h', '--help', 'Show this message.'){ print opt }
   opt.parse!
 end
 
