@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
 wpfile = ARGV.shift
 
 File.open(wpfile, "r") do |f|
