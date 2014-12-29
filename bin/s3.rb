@@ -160,7 +160,7 @@ EOB
   def exec(argv)
     bucket = get_bucket
     keys = if @options[:input]
-      File.readlines(@options[:input]).map{|l| l.chomp}
+      File.readlines(@options[:input]).map{|l| l.chomp}.select{|l| !(l =~ /\/$/)}
     else
       [argv.shift]
     end
@@ -170,6 +170,7 @@ EOB
         puts "Error: No such object: #{key}"
         exit 0
       end
+      puts key
       file = key
       if File.dirname(file) != "."
         FileUtils.mkdir_p(File.dirname(file))
