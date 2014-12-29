@@ -11,6 +11,7 @@ require 'optparse'
 SCRIPT_VERSION = "0.1.0"
 
 def main
+  options = {}
   parser = OptionParser.new
   parser.banner = <<-EndBanner
 Usage: #{parser.program_name} <subcommand> [options] [args]
@@ -23,6 +24,9 @@ Subcommands:
 
 Global Options:
   EndBanner
+  parser.on('-b', '--bucket=BUCKET', 'Specify bucket.'){|v|
+    options[:bucket] = v
+  }
   parser.on('-v', '--version', 'Show version.') {
     puts "v#{SCRIPT_VERSION}"
     exit 0
@@ -33,10 +37,10 @@ Global Options:
   }
 
   subcommands = {}
-  subcommands['list']     = ListCommand.new
-  subcommands['upload']   = UploadCommand.new
-  subcommands['download'] = DownloadCommand.new
-  subcommands['delete']   = DeleteCommand.new
+  subcommands['list']     = ListCommand.new(options)
+  subcommands['upload']   = UploadCommand.new(options)
+  subcommands['download'] = DownloadCommand.new(options)
+  subcommands['delete']   = DeleteCommand.new(options)
   begin
     parser.order!
     if ARGV.empty?
@@ -83,7 +87,8 @@ class Subcommand
     s3 = AWS::S3.new(
       :access_key_id     => config["ACCESS_KEY_ID"],
       :secret_access_key => config["SECRET_ACCESS_KEY"])
-    s3.buckets[config["BUCKET"]]
+    bucket = @options[:bucket] || config["BUCKET"]
+    s3.buckets[bucket]
   end
 
 end   # class Subcommand
@@ -91,8 +96,8 @@ end   # class Subcommand
 
 class ListCommand < Subcommand
 
-  def initialize
-    @options = {}
+  def initialize(opts)
+    @options = opts
     @parser = OptionParser.new
     @parser.banner =<<EOB
 #{@parser.program_name} list - List objects in bucket.
@@ -112,8 +117,8 @@ end   # of class ListCommand
 
 class UploadCommand < Subcommand
 
-  def initialize
-    @options = {}
+  def initialize(opts)
+    @options = opts
     @parser = OptionParser.new
     @parser.banner =<<EOB
 #{@parser.program_name} upload - Upload file to bucket.
@@ -140,8 +145,8 @@ end   # of class UploadCommand
 
 class DownloadCommand < Subcommand
 
-  def initialize
-    @options = {}
+  def initialize(opts)
+    @options = opts
     @parser = OptionParser.new
     @parser.banner =<<EOB
 #{@parser.program_name} download - Download file from bucket.
@@ -173,8 +178,8 @@ end   # of class DownloadCommand
 
 class DeleteCommand < Subcommand
 
-  def initialize
-    @options = {}
+  def initialize(opts)
+    @options = opts
     @parser = OptionParser.new
     @parser.banner =<<EOB
 #{@parser.program_name} delete - Delete key from bucket.
