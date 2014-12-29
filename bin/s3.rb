@@ -152,23 +152,32 @@ class DownloadCommand < Subcommand
 #{@parser.program_name} download - Download file from bucket.
 Usage: #{@parser.program_name} download <key>
 EOB
+    @parser.on('-i', '--input=FILE', 'Read keys from FILE.'){|v|
+      @options[:input] = v
+    }
   end
 
   def exec(argv)
     bucket = get_bucket
-    key = argv.shift
-    obj = bucket.objects[key]
-    unless obj.exists?
-      puts "Error: No such object: #{key}"
-      exit 0
+    keys = if @options[:input]
+      File.readlines(@options[:input]).map{|l| l.chomp}
+    else
+      [argv.shift]
     end
-    file = key
-    if File.dirname(file) != "."
-      FileUtils.mkdir_p(File.dirname(file))
-    end
-    File.open(file, "wb") do |f|
-      obj.read do |chunk|
-        f.write(chunk)
+    keys.each do |key|
+      obj = bucket.objects[key]
+      unless obj.exists?
+        puts "Error: No such object: #{key}"
+        exit 0
+      end
+      file = key
+      if File.dirname(file) != "."
+        FileUtils.mkdir_p(File.dirname(file))
+      end
+      File.open(file, "wb") do |f|
+        obj.read do |chunk|
+          f.write(chunk)
+        end
       end
     end
   end
