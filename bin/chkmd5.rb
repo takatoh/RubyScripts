@@ -5,6 +5,7 @@
 #
 
 require 'digest/md5'
+require 'find'
 require 'optparse'
 
 
@@ -25,6 +26,7 @@ ARGV.options do |opt|
 Usage: #{opt.program_name} [-c] hashfile
        #{opt.program_name} [-c] -H HASH file
        #{opt.program_name} -m [-f] [-s] file [file..]
+       #{opt.program_name} -m -r dir
 
   EOM
   opt.on('-c', '--check', 'Check MD5 hash(default).'){ options[:task] = :check }
@@ -36,23 +38,35 @@ Usage: #{opt.program_name} [-c] hashfile
   opt.on('-s', '--same-name-as-file', 'Output to same-name-as-file.md5.'){
     options[:sameas] = true
   }
+  opt.on('-r', '--recursive', 'Recursive. Argument must be a directory name.'){|v|
+    options[:recursive] = true
+  }
   opt.on_tail('-h', '--help', 'Show this message.'){ print opt }
   opt.parse!
 end
 
 case options[:task]
 when :make
-  ARGV.each do |file|
-    begin
-      r = mkmd5(file)
-      r += "  #{file}" if options[:filename]
-      if options[:sameas]
-        File.open("#{file}.md5", "w"){ |f| f.print r }
-      else
-        print r + "\n"
+  if options[:recursive]
+    dir = ARGV.shift
+    Find.find(dir) do |f|
+      if File.file?(f)
+        puts mkmd5(f) + "  " + f
       end
-    rescue => err
-      $stderr.print "Not exist:  #{file}\n"
+    end
+  else
+    ARGV.each do |file|
+      begin
+        r = mkmd5(file)
+        r += "  #{file}" if options[:filename]
+        if options[:sameas]
+          File.open("#{file}.md5", "w"){ |f| f.print r }
+        else
+          print r + "\n"
+        end
+      rescue => err
+        $stderr.print "Not exist:  #{file}\n"
+      end
     end
   end
 when :check
