@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 #
-#  Dip files from sub-directories.
+#  Scoop files from sub directories.
 #
 
 require 'pathname'
@@ -14,7 +14,7 @@ SCRIPT_VERSION = "v0.1.2"
 options = {}
 opts = OptionParser.new
 opts.banner =<<EOB
-#{opts.program_name} - Dip files from sub directories.
+#{opts.program_name} - Scoop files from sub directories.
 Usage: #{opts.program_name} [option] DIR [DEST]
 EOB
 opts.on_tail('-r', '--remove', 'remove files in sub directories'){|v| options[:remove] = true}
