@@ -40,4 +40,4 @@ src.find do |f|
 end
 
 puts ""
-puts "#{counter.to_s} files diped."
+puts "#{counter.to_s} files scooped."
