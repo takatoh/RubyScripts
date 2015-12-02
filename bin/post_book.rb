@@ -3,13 +3,14 @@
 
 
 require 'httpclient'
+require 'yaml'
 require 'csv'
 require 'json'
-require 'pp'
+require 'optparse'
 
 
 def post_book(book)
-  post_url = "http://localhost:9090/api/book/add/"
+  post_url = "http://localhost:5000/api/book/add/"
   post_data = {
     "title"          => book["title"],
     "volume"         => book["volume"]         || "",
@@ -28,9 +29,10 @@ def post_book(book)
     "disk"           => book["disk"]           || "",
     "disposed"       => book["disposed"]       || "0"
   }
+  json_data = post_data.to_json
 
-  res = @client.post(post_url, post_data)
-  result = JSON.parse(res.body)
+  res = @client.post_content(post_url, json_data, "Content-Type" => "application/json")
+  result = JSON.parse(res)
   puts title_with_vol(result["books"].first)
 end
 
@@ -43,11 +45,30 @@ def title_with_vol(book)
 end
 
 
+options = {}
+opts = OptionParser.new
+opts.banner = <<EOB
+Usage: #{opts.program_name} [options] <inputfile.yaml>
+
+Options:
+EOB
+opts.on("--csv", "Input from CSV."){|v| options[:csv] = true }
+opts.on_tail("--help", "-h", "Show this message"){|v|
+  puts opts.help
+  exit(0)
+}
+opts.parse!
+
 @client = HTTPClient.new
 
-csvfile = File.open(ARGV.shift, "r")
-csv = CSV.new(csvfile, headers: true)
-csv.each do |row|
+inputfile = ARGV.shift
+books = if options[:csv]
+  csvfile = File.open(inputfile, "r")
+  CSV.new(csvfile, headers: true)
+else
+  YAML.load_file(inputfile)["books"]
+end
+books.each do |book|
 #  puts title_with_vol(row)
-  post_book(row)
+  post_book(book)
 end
