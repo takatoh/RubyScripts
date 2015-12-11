@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 #
-# fc.rb - File counter
+# fcount.rb - File counter
 #
 
 require 'pathname'
