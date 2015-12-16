@@ -31,10 +31,7 @@ class DirNode
   end
 
   def add(path)
-    puts "--"
-    p path
     path2 = path.sub(/#{@path}\/?/, "")
-    p path2
     unless path2.empty?
       m = path2.split("/")
       ch = if @children.map{|c| c.name }.include?(m[0])
