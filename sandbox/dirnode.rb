@@ -7,10 +7,10 @@ require 'find'
 
 class DirNode
 
-  attr_reader :name
+  attr_reader :path
 
-  def initialize(name, root = false)
-    @name = name
+  def initialize(path, root = false)
+    @path = path
     @root = root
     @children = []
   end
@@ -19,35 +19,39 @@ class DirNode
     name = dir.split("/")[0]
     root = DirNode.new(name, true)
     Find.find(dir) do |f|
-      if File.directory?(f) && f != dir.to_s
+      if File.directory?(f) && f != dir
         root.add(f)
       end
     end
     root
   end
 
+  def name
+    @path.split("/")[-1]
+  end
+
   def add(path)
-    m = path.to_s.split("/")
-    if m.size > 1
-      ch_name = m[1]
-      ch_path = m[1..-1].join("/")
-      ch = if @children.map{|c| c.name }.include?(ch_name)
-        @children.select{|c| c.name == ch_name }.first
+    puts "--"
+    p path
+    path2 = path.sub(/#{@path}\/?/, "")
+    p path2
+    unless path2.empty?
+      m = path2.split("/")
+      ch = if @children.map{|c| c.name }.include?(m[0])
+        @children.select{|c| c.name == m[0] }.first
       else
-        c = DirNode.new(ch_path)
+        c = DirNode.new(path)
         @children << c
         c
       end
-      if m.size > 2
-        ch.add(ch_path)
-      end
+      ch.add(path)
     end
     self
   end
 
   def to_tree(ind = 0)
     result = ""
-    result << " " * ind + "#{@name}\n"
+    result << " " * ind + "#{name}\n"
     result << @children.map do |ch|
       ch.to_tree(ind + 2)
     end.join("")
@@ -57,6 +61,8 @@ class DirNode
 end   # of class DirNode
 
 
-dir = ARGV.shift
-root = DirNode.read(dir)
-print root.to_tree
+if __FILE__ == $0
+  dir = ARGV.shift
+  root = DirNode.read(dir)
+  print root.to_tree
+end
