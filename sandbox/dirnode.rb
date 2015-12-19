@@ -57,20 +57,20 @@ class DirNode
 
   def to_html(ind = 0)
     result = ""
-    result << " " * (ind * 4) + "<ul>\n" if @root
-    result << " " * (ind * 4 + 2) + "<li>#{name}"
+    result << " " * ind + "<ul>\n" if @root
+    result << " " * (ind + 2) + "<li>#{name}"
     unless @children.empty?
       result << "\n"
-      result << " " * (ind * 4 + 4) + "<ul>\n"
+      result << " " * (ind + 4) + "<ul>\n"
       @children.each do |ch|
-        result << ch.to_html(ind + 1)
+        result << ch.to_html(ind + 4)
       end
-      result << " " * (ind * 4 + 4) + "</ul>\n"
-      result << " " * (ind * 4 + 2) + "</li>\n"
+      result << " " * (ind + 4) + "</ul>\n"
+      result << " " * (ind + 2) + "</li>\n"
     else
       result << "</li>\n"
     end
-    result << " " * (ind * 4) + "</ul>\n" if @root
+    result << " " * ind + "</ul>\n" if @root
     result
   end
 
