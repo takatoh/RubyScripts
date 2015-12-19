@@ -55,11 +55,30 @@ class DirNode
     result
   end
 
+  def to_html(ind = 0)
+    result = ""
+    result << " " * (ind * 4) + "<ul>\n" if @root
+    result << " " * (ind * 4 + 2) + "<li>#{name}"
+    unless @children.empty?
+      result << "\n"
+      result << " " * (ind * 4 + 4) + "<ul>\n"
+      @children.each do |ch|
+        result << ch.to_html(ind + 1)
+      end
+      result << " " * (ind * 4 + 4) + "</ul>\n"
+      result << " " * (ind * 4 + 2) + "</li>\n"
+    else
+      result << "</li>\n"
+    end
+    result << " " * (ind * 4) + "</ul>\n" if @root
+    result
+  end
+
 end   # of class DirNode
 
 
 if __FILE__ == $0
   dir = ARGV.shift
   root = DirNode.read(dir)
-  print root.to_tree
+  print root.to_html
 end
