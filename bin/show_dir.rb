@@ -41,7 +41,7 @@ class DirNode
 
   def add(path)
     path2 = path.sub(/#{@path}\/?/, "")
-    unless path2.empty? || path2.start_with?(".")
+    unless path2.empty?
       m = path2.split("/")
       ch = if @children.map{|c| c.name }.include?(m[0])
         @children.select{|c| c.name == m[0] }.first
@@ -84,27 +84,29 @@ class DirNode
     result
   end
 
-  def show(depth = 0)
-    if depth == 0
+  def show(depth)
+    if depth.nil?
       puts @path
-      @children.each{|c| c.show(0)}
+      @children.each{|c| c.show(nil) }
+    elsif depth == 0
+      puts @path
     else
-      @children.each{|c| c.show(depth - 1)}
+      @children.each{|c| c.show(depth - 1) }
     end
   end
 
 end   # of class DirNode
 
+
 options = {
-  :depth => 0
+  :depth => nil
 }
 opts = OptionParser.new
 opts.on("-d", "--depth=N", "Depth to display."){|v| options[:depth] = v.to_i }
 opts.on_tail("-h", "--help", "Show this message."){|v| print opts.help }
-opts.on_tail("-v", "--version", "Show version"){|v| puts "v#{SCRIPT_VERSION}"}
+opts.on_tail("-v", "--version", "Show version"){|v| puts "v#{SCRIPT_VERSION}" }
 opts.parse!
 
 dir = ARGV.shift
 root = DirNode.read(dir)
 root.show(options[:depth])
-#print root.to_html
