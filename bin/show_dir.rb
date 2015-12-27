@@ -103,8 +103,8 @@ options = {
 }
 opts = OptionParser.new
 opts.on("-d", "--depth=N", "Depth to display."){|v| options[:depth] = v.to_i }
-opts.on_tail("-h", "--help", "Show this message."){|v| print opts.help }
-opts.on_tail("-v", "--version", "Show version"){|v| puts "v#{SCRIPT_VERSION}" }
+opts.on_tail("-h", "--help", "Show this message."){|v| print opts.help; exit }
+opts.on_tail("-v", "--version", "Show version"){|v| puts "v#{SCRIPT_VERSION}"; exit }
 opts.parse!
 
 dir = ARGV.shift
