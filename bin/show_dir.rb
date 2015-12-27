@@ -6,7 +6,7 @@ require 'find'
 require 'optparse'
 
 
-SCRIPT_VERSION = "0.1.0"
+SCRIPT_VERSION = "0.1.1"
 
 
 class DirNode
@@ -102,6 +102,9 @@ options = {
   :depth => nil
 }
 opts = OptionParser.new
+opts.banner = <<EOB
+Usage: #{opts.program_name}.rb [options] <dir>
+EOB
 opts.on("-d", "--depth=N", "Depth to display."){|v| options[:depth] = v.to_i }
 opts.on_tail("-h", "--help", "Show this message."){|v| print opts.help; exit }
 opts.on_tail("-v", "--version", "Show version"){|v| puts "v#{SCRIPT_VERSION}"; exit }
