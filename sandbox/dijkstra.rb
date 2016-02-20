@@ -4,12 +4,15 @@
 
 class Node
 
-  attr_accessor :done, :cost
+  attr_reader :name
+  attr_accessor :done, :cost, :from
 
-  def initialize
+  def initialize(name)
+    @name = name
     @edges = []
     @done = false
     @cost = nil
+    @from = nil
   end
 
   def add_edge(edge)
@@ -33,7 +36,7 @@ end
 
 nodes = []
 0.upto(5) do |i|
-  nodes << Node.new
+  nodes << Node.new(i)
 end
 
 edges = [
@@ -57,6 +60,7 @@ start_node.done = true
 start_node.each_edge do |edge|
   n = nodes[edge.dest]
   n.cost = edge.cost
+  n.from = start_node.name
 end
 while true do
   done_node = nil
@@ -68,11 +72,15 @@ while true do
         n = nodes[e.dest]
         if n.cost.nil?
           n.cost = node.cost + e.cost
+          n.from = node.name
         else
-          n.cost = [n.cost, node.cost + e.cost].min
+          if node.cost + e.cost < n.cost
+            n.cost = node.cost + e.cost
+            n.from = node.name
+          end
         end
       end
-      if done_node.nil? || done_node.cost > node.cost
+      if done_node.nil? || node.cost < done_node.cost
         done_node = node
       end
     end
@@ -82,3 +90,9 @@ while true do
 end
 
 puts nodes[5].cost
+route = [5]
+begin
+  node = nodes[route.first]
+  route.unshift(node.from)
+end until route.first == 0
+puts route.map(&:to_s).join(" -> ")
