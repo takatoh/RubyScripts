@@ -34,6 +34,7 @@ def make_edge(nodes, a, b, cost)
   nodes[b].add_edge(Edge.new(a, cost))
 end
 
+
 nodes = []
 0.upto(5) do |i|
   nodes << Node.new(i)
@@ -54,7 +55,10 @@ edges.each do |a, b, cost|
   make_edge(nodes, a, b, cost)
 end
 
-start_node = nodes[0]     # Start node.
+start = 0
+goal = 5
+
+start_node = nodes[start]
 start_node.cost = 0
 start_node.done = true
 start_node.each_edge do |edge|
@@ -89,10 +93,10 @@ while true do
   break if nodes.all?{|n| n.done }
 end
 
-puts nodes[5].cost
-route = [5]
+puts nodes[goal].cost
+route = [goal]
 begin
   node = nodes[route.first]
   route.unshift(node.from)
-end until route.first == 0
+end until route.first == start
 puts route.map(&:to_s).join(" -> ")
