@@ -1,6 +1,7 @@
+#!/usr/bin/env ruby
 # coding: utf-8
 
-def randstr(length)
+def strrand(length)
   pool = ('A'..'Z').to_a + ('a'..'z').to_a + ('0'..'9').to_a
   r = Random.new
   l = pool.size
@@ -11,6 +12,11 @@ def randstr(length)
   rand_str
 end
 
+def usage
+  puts "Usage: random_string.rb <length>"
+end
+
 length = ARGV.shift.to_i
-print randstr(length)
+usage if length < 1
+puts strrand(length)
 
