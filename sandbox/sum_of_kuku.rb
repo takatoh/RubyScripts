@@ -7,4 +7,4 @@ def sum_of_kuku
 end
 
 
-print sum_of_kuku
+puts sum_of_kuku
