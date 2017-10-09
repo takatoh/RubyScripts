@@ -1,4 +1,4 @@
-#!ruby
+#!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 #
 # Rubygem `Nokogiri' is required.
