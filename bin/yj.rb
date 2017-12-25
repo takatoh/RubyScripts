@@ -19,9 +19,10 @@ end
 
 src = ARGV.shift
 ext = File.extname(src).downcase
-if ext == ".yaml" || ext == ".yml"
+case ext
+when ".yaml", ".yml"
   puts yaml2json(src)
-elsif ext == ".json"
+when ".json"
   puts json2yaml(src)
 else
   puts "Unsupported format."
