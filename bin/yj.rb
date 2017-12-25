@@ -10,10 +10,7 @@ def yaml2json(src)
 end
 
 def json2yaml(src)
-  doc = nil
-  File.open(src) do |f|
-    doc = JSON.parse(f.read)
-  end
+  doc = File.open(src){|f| JSON.parse(f.read) }
   doc.to_yaml
 end
 
