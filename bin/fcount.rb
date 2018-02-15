@@ -26,11 +26,16 @@ class FileCounter
         counts.concat(FileCounter.new(d, @options).count)
       end
     end
-    files = @dir.children.select{|c| c.file? }
-    if @options[:type]
-      files = files.select{|f| f.extname.downcase == @options[:type] }
+    if @options[:dir]
+      dirs = @dir.children.select{|c| c.directory? }
+      counts << {path: @dir.to_s, count: dirs.size}
+    else
+      files = @dir.children.select{|c| c.file? }
+      if @options[:type]
+        files = files.select{|f| f.extname.downcase == @options[:type] }
+      end
+      counts << {path: @dir.to_s, count: files.size}
     end
-    counts << {path: @dir.to_s, count: files.size}
     if @options[:summarize]
       dir = @dir.to_s
       count = counts.map{|c| c[:count] }.inject(:+)
@@ -55,6 +60,7 @@ parser.on("-s", "--summarize", "Display only a total for each directory."){|v|
   options[:summarize] = true
 }
 parser.on("-t", "--type=TYPE", "Specify file extname."){|v| options[:type] = v }
+parser.on("-d", "--directory", "Count directory instead of file."){|v| options[:dir] = true }
 parser.on_tail("-v", "--version", "Show version."){|v| puts "v#{SCRIPT_VERSION}"; exit }
 parser.on_tail("-h", "--help", "Show this message."){|v| print parser; exit }
 parser.parse!
