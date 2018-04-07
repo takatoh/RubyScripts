@@ -92,7 +92,7 @@ options = {}
 opts = OptionParser.new
 opts.banner =<<EOB
 #{opts.program_name} - Sweep files in the directory.
-Usage: #{opts.program_name} [option] <dir>
+Usage: #{opts.program_name} [options] <dir>
 EOB
 opts.on('-d', '--dry-run', 'dry running'){|v| options[:dry_run] = true}
 opts.on('-t', '--types=TYPES', 'remove specified types(comma separated)') do |v|
@@ -116,4 +116,3 @@ opts.parse!
 dir = Pathname.new(ARGV.shift)
 sweeper = FileSweeper.new(dir, options)
 sweeper.sweep
-
