@@ -60,7 +60,7 @@ class ContentGetter
         @options[:types].include?(type)
       end
     end.map do |l|
-      unless /\Ahttp:/ =~ l then @url_base + l else l end
+      unless /\Ahttps?:/ =~ l then @url_base + l else l end
     end
 
     links
