@@ -14,7 +14,7 @@ require 'rubygems'
 require 'nokogiri'
 
 
-SCRIPT_VERSION = "1.3.0"
+SCRIPT_VERSION = "1.3.1"
 A_HREF     = :a_href
 IMG_SRC    = :img_src
 BACKGROUND = :background
