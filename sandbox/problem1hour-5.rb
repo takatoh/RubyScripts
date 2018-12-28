@@ -14,13 +14,9 @@ end
 
 def solv
   a = [1,2,3,4,5,6,7,8,9].map{|n| n.to_s }
-  result = []
-  combi(a).each do |e|
-    if eval(e) == 100
-      result << e
-    end
+  combi(a).select do |e|
+    eval(e) == 100
   end
-  result
 end
 
 solv.each do |e|
