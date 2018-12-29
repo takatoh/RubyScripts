@@ -21,20 +21,27 @@ class FileCounter
 
   def count
     counts = []
-    if @options[:recursive] or @options[:summarize]
+    if @options[:just] > 1
       @dir.children.select{|c| c.directory? }.each do |d|
-        counts.concat(FileCounter.new(d, @options).count)
+        j = @options[:just]
+        counts.concat(FileCounter.new(d, @options.merge({:just => j - 1})).count)
       end
-    end
-    if @options[:dir]
-      dirs = @dir.children.select{|c| c.directory? }
-      counts << {path: @dir.to_s, count: dirs.size}
-    else
-      files = @dir.children.select{|c| c.file? }
-      if @options[:type]
-        files = files.select{|f| f.extname.downcase == @options[:type] }
+    elsif @options[:just] == 1
+      if @options[:recursive]
+        @dir.children.select{|c| c.directory? }.each do |d|
+          counts.concat(FileCounter.new(d, @options).count)
+        end
       end
-      counts << {path: @dir.to_s, count: files.size}
+      if @options[:dir]
+        dirs = @dir.children.select{|c| c.directory? }
+        counts << {path: @dir.to_s, count: dirs.size}
+      else
+        files = @dir.children.select{|c| c.file? }
+        if @options[:type]
+          files = files.select{|f| f.extname.downcase == @options[:type] }
+        end
+        counts << {path: @dir.to_s, count: files.size}
+      end
     end
     if @options[:summarize]
       dir = @dir.to_s
@@ -48,7 +55,9 @@ class FileCounter
 end   # of class FileCounter
 
 
-options = {}
+options = {
+  :just => 1
+}
 parser = OptionParser.new
 parser.banner = <<EOB
 #{parser.program_name} - File counter
@@ -56,11 +65,10 @@ Usage: #{parser.program_name} [options] <dir>
 
 EOB
 parser.on("-r", "--recursive", "Rcursive mode."){|v| options[:recursive] = true }
-parser.on("-s", "--summarize", "Display only a total for each directory."){|v|
-  options[:summarize] = true
-}
+parser.on("-s", "--summarize", "Display only a total."){|v| options[:summarize] = true }
 parser.on("-t", "--type=TYPE", "Specify file extname."){|v| options[:type] = v }
 parser.on("-d", "--directory", "Count directory instead of file."){|v| options[:dir] = true }
+parser.on("-j", "--just-depth=N", "Count if depth is just N."){|v| options[:just] = v.to_i }
 parser.on_tail("-v", "--version", "Show version."){|v| puts "v#{SCRIPT_VERSION}"; exit }
 parser.on_tail("-h", "--help", "Show this message."){|v| print parser; exit }
 parser.parse!
