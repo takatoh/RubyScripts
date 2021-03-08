@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 #
-# sweep.rb - Sweep files in the directory.
+# sweep.rb - Sweep files in the directory recursively.
 #
 
 require "pathname"
@@ -18,7 +18,8 @@ def main
 
   opts = OptionParser.new
   opts.banner =<<EOB
-  #{opts.program_name} - Sweep files in the directory.
+  #{opts.program_name} - Sweep files in the directory recursively.
+
   Usage: #{opts.program_name} [options] <dir>
 EOB
   opts.on("-d", "--dry-run", "dry running"){|v| options[:dry_run] = true }
