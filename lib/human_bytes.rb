@@ -4,8 +4,9 @@
 #
 
 module HumanBytes
+
   def human_bytes(bytes)
-    units = %w( B KB MB GB TB PB EB ZB YB )
+    units = %w( bytes KB MB GB TB PB EB ZB YB )
     u = 0
     until bytes < 1000.0
       bytes = bytes / 1000.0
@@ -15,5 +16,5 @@ module HumanBytes
     sprintf("%.#{d}f#{units[u]}", bytes)
   end
   module_function :human_bytes
-end
 
+end
