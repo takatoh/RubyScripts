@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# encoding: utf-8
 #
-# = HumanBytes module
+# HumanBytes module
 #
 
 module HumanBytes
