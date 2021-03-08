@@ -47,6 +47,7 @@ end
 
 
 class FileSweeper
+
   IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif .tif .tiff .tga .pcx)
 
   def initialize(dir, opts)
@@ -119,7 +120,8 @@ class FileSweeper
   def not_image?(p)
     !(IMAGE_TYPES.include?(p.extname.downcase))
   end
-end   # of FileSweeper
+
+end     # of FileSweeper
 
 
 main
