@@ -29,6 +29,7 @@ EOB
   opts.on("-e", "--except-types=TYPES", "except specified types(comma separated)") do |v|
     options[:except_types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t }
   end
+  opts.on("-n", "--name", "specify file name"){|v| options[:name] = v }
   opts.on("--not-image", "except following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
     options[:not_image] = true
   end
@@ -74,6 +75,9 @@ class FileSweeper
     end
     if @options[:except_types]
       @conds << lambda{|f| !(@options[:except_types].include?(f.extname.downcase)) }
+    end
+    if @options[:name]
+      @conds << lambda{|f| f.basename.to_s == @options[:name] }
     end
     if @options[:not_image]
       @conds << lambda{|f| not_image?(f) }
