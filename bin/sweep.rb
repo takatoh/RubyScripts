@@ -10,7 +10,7 @@ require 'date'
 require 'optparse'
 
 
-SCRIPT_VERSION = "v0.2.4"
+SCRIPT_VERSION = "v0.2.5"
 
 
 def main
