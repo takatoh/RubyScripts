@@ -1,4 +1,4 @@
-#! ruby
+#!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 #
 # sweep.rb - Sweep files in the directory.
