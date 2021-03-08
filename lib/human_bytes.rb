@@ -12,17 +12,8 @@ module HumanBytes
       u += 1
     end
     d = bytes >= 100 ? 0 : (bytes >= 10 ? 1 : 2)
-#    roundoff(bytes, d).to_s + units[u]
     sprintf("%.#{d}f#{units[u]}", bytes)
   end
   module_function :human_bytes
-
-  private
-
-  def self.roundoff(n, d = 0)
-    x = 10**d
-    r = (n * x + 0.5).floor
-    d.zero? ? r : r.quo(x).to_f
-  end
 end
 
