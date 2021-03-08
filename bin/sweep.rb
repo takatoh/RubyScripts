@@ -12,6 +12,40 @@ require 'optparse'
 
 SCRIPT_VERSION = "v0.2.4"
 
+
+def main
+  options = {}
+
+  opts = OptionParser.new
+  opts.banner =<<EOB
+  #{opts.program_name} - Sweep files in the directory.
+  Usage: #{opts.program_name} [options] <dir>
+EOB
+  opts.on('-d', '--dry-run', 'dry running'){|v| options[:dry_run] = true}
+  opts.on('-t', '--types=TYPES', 'remove specified types(comma separated)') do |v|
+    options[:types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
+  end
+  opts.on('-a', '--all-types', 'remove all types'){|v| options[:all_types] = true}
+  opts.on('-e', '--except-types=TYPES', 'except specified types(comma separated)') do |v|
+    options[:except_types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
+  end
+  opts.on('--not-image', "except following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
+    options[:not_image] = true
+  end
+  opts.on('-T', '--time-distance=N', "older than N days ago") do |v|
+    options[:distance] = v.to_i
+  end
+  opts.on('--empty-dir', 'remove empty directories'){|v| options[:empty_dir] = true}
+  opts.on_tail('-h', '--help', 'show this message'){|v| puts opts; exit}
+  opts.on_tail('-v', '--version', 'show version'){|v| puts SCRIPT_VERSION; exit}
+  opts.parse!
+
+  dir = Pathname.new(ARGV.shift)
+  sweeper = FileSweeper.new(dir, options)
+  sweeper.sweep
+end
+
+
 class FileSweeper
   IMAGE_TYPES = %w(.jpg .jpeg .png .bmp .gif .tif .tiff .tga .pcx)
 
@@ -88,31 +122,4 @@ class FileSweeper
 end   # of FileSweeper
 
 
-options = {}
-opts = OptionParser.new
-opts.banner =<<EOB
-#{opts.program_name} - Sweep files in the directory.
-Usage: #{opts.program_name} [options] <dir>
-EOB
-opts.on('-d', '--dry-run', 'dry running'){|v| options[:dry_run] = true}
-opts.on('-t', '--types=TYPES', 'remove specified types(comma separated)') do |v|
-  options[:types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
-end
-opts.on('-a', '--all-types', 'remove all types'){|v| options[:all_types] = true}
-opts.on('-e', '--except-types=TYPES', 'except specified types(comma separated)') do |v|
-  options[:except_types] = v.split(",").map{|t| t.downcase!; t[0,1] == "." ? t : "." + t}
-end
-opts.on('--not-image', "except following types: #{FileSweeper::IMAGE_TYPES.join(",")}") do |v|
-  options[:not_image] = true
-end
-opts.on('-T', '--time-distance=N', "older than N days ago") do |v|
-  options[:distance] = v.to_i
-end
-opts.on('--empty-dir', 'remove empty directories'){|v| options[:empty_dir] = true}
-opts.on_tail('-h', '--help', 'show this message'){|v| puts opts; exit}
-opts.on_tail('-v', '--version', 'show version'){|v| puts SCRIPT_VERSION; exit}
-opts.parse!
-
-dir = Pathname.new(ARGV.shift)
-sweeper = FileSweeper.new(dir, options)
-sweeper.sweep
+main
